@@ -64,6 +64,7 @@ namespace AI_Studio
             }
 
             var api = new OpenAIAPI(generalOptions.ApiKey);
+            api.ApiUrlFormat = generalOptions.ApiUrl;
             var chatRequestTemplate = new ChatRequest()
             {
                 Model = generalOptions.LanguageModel switch

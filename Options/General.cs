@@ -14,6 +14,12 @@ namespace AI_Studio
     public class General : BaseOptionModel<General>
     {
         [Category("General")]
+        [DisplayName("API URL")]
+        [Description("Base url for OpenAI. For OpenAI, should be \"https://api.openai.com/{0}/{1}\"")]
+        [DefaultValue("https://api.openai.com/{0}/{1})")]
+        public string ApiUrl { get; set; }
+
+        [Category("General")]
         [DisplayName("API Key")]
         [Description("AI Studio utilizes Chat GPT API, to use this extension create an API Key and add it here.")]
         public string ApiKey { get; set; }
