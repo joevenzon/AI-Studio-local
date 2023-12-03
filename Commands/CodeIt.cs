@@ -7,14 +7,15 @@ namespace AI_Studio
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            SystemMessage = "Code it by use cases. Write only the code, not the explanation.";
+            SystemMessage = "";
             ResponseBehavior = ResponseBehavior.Insert;
 
             var opts = await Commands.GetLiveInstanceAsync();
 
-            UserInput = opts.CodeIt;
-            _addContentTypePrefix = true;
-            _stripResponseMarkdownCode = true;
+            UserInput = "";
+            _addContentTypePrefix = false;
+            _stripResponseMarkdownCode = false;
+            _useCompletion = true;
 
             await base.ExecuteAsync(e);
         }
