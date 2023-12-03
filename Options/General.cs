@@ -31,6 +31,12 @@ namespace AI_Studio
         public bool FormatChangedText { get; set; } = true;
 
         [Category("General")]
+        [DisplayName("Max tokens")]
+        [Description("Maximum number of tokens to return from the completion API.")]
+        [DefaultValue(200)]
+        public int MaxTokens { get; set; } = 200;
+
+        [Category("General")]
         [DisplayName("Language Model")]
         [Description("Chat language model")]
         [DefaultValue(ChatLanguageModel.ChatGPTTurbo)]

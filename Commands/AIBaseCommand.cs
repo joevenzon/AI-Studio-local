@@ -49,6 +49,7 @@ namespace AI_Studio
             {
                 if (_useCompletion)
                 {
+                    // deepseek infill formatting
                     text = "<｜fim▁begin｜>";
                     var textBuffer = docView.TextView.TextBuffer;
                     int line = textBuffer.CurrentSnapshot.GetLineNumberFromPosition(selection.Start.Position);
@@ -57,14 +58,14 @@ namespace AI_Studio
                     for (int i = Math.Max(0,line-context_above_lines); i < line; i++)
                     {
                         var lineContents = textBuffer.CurrentSnapshot.GetLineFromLineNumber(i);
-                        text += lineContents.GetText() + "\n";
+                        text += lineContents.GetText() + Environment.NewLine;
                     }
                     text += textBuffer.CurrentSnapshot.GetLineFromLineNumber(line).GetText();
                     text += "<｜fim▁hole｜>";
                     for (int i = line; i < Math.Min(line+context_below_lines, textBuffer.CurrentSnapshot.LineCount); i++)
                     {
                         var lineContents = textBuffer.CurrentSnapshot.GetLineFromLineNumber(i);
-                        text += lineContents.GetText() + "\n";
+                        text += lineContents.GetText() + Environment.NewLine;
                     }
                     text += "<｜fim▁end｜>";
                 }
@@ -124,6 +125,7 @@ namespace AI_Studio
 
             var completion = new CompletionRequest();
             completion.Prompt = text;
+            completion.MaxTokens = generalOptions.MaxTokens;
 
             string response = "";
             int oldSelectionStart = selection.Start.Position;
