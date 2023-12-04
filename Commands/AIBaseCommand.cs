@@ -50,24 +50,24 @@ namespace AI_Studio
                 if (_useCompletion)
                 {
                     // deepseek infill formatting
-                    text = "<｜fim▁begin｜>";
+                    text = generalOptions.InfillBeginString;
                     var textBuffer = docView.TextView.TextBuffer;
                     int line = textBuffer.CurrentSnapshot.GetLineNumberFromPosition(selection.Start.Position);
-                    int context_above_lines = 100;
-                    int context_below_lines = 20;
+                    int context_above_lines = generalOptions.ContextAbove;
+                    int context_below_lines = generalOptions.ContextBelow;
                     for (int i = Math.Max(0,line-context_above_lines); i < line; i++)
                     {
                         var lineContents = textBuffer.CurrentSnapshot.GetLineFromLineNumber(i);
                         text += lineContents.GetText() + Environment.NewLine;
                     }
                     text += textBuffer.CurrentSnapshot.GetLineFromLineNumber(line).GetText();
-                    text += "<｜fim▁hole｜>";
+                    text += generalOptions.InfillHoleString;
                     for (int i = line; i < Math.Min(line+context_below_lines, textBuffer.CurrentSnapshot.LineCount); i++)
                     {
                         var lineContents = textBuffer.CurrentSnapshot.GetLineFromLineNumber(i);
                         text += lineContents.GetText() + Environment.NewLine;
                     }
-                    text += "<｜fim▁end｜>";
+                    text += generalOptions.InfillEndString;
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace AI_Studio
             }
 
             var completion = new CompletionRequest();
-            completion.Prompt = text;
+            completion.Prompt = text.Replace("\r\n", "\n").Replace("\r","\n"); // model wants all line breaks to be \n
             completion.MaxTokens = generalOptions.MaxTokens;
 
             string response = "";
@@ -140,7 +140,13 @@ namespace AI_Studio
                 {
                     response = await chat.GetResponseFromChatbotAsync();
                 }
-                
+
+                if (_useCompletion)
+                {
+                    // switch linebreaks back to environment style
+                    response = response.Replace("\n", Environment.NewLine);
+                }
+
                 if (_stripResponseMarkdownCode)
                 {
                     response = StripResponseMarkdownCode(response);
@@ -155,6 +161,12 @@ namespace AI_Studio
                         // Delete the beginning of the response, since it's redundant for the
                         // completion/infilling models I'm using (deepseek)
                         response = response.Substring(text.Length);
+                    }
+
+                    if (response.EndsWith("<EOT>"))
+                    {
+                        // delete a trailing EOT token that codelama adds
+                        response = response.Substring(0, response.Length - "<EOT>".Length);
                     }
                 }
 

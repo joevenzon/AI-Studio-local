@@ -25,6 +25,24 @@ namespace AI_Studio
         public string ApiKey { get; set; }
 
         [Category("General")]
+        [DisplayName("Infill Begin")]
+        [Description("Infill start string, e.g. <|fim_begin|> for deepseek")]
+        [DefaultValue("<|fim_begin|>")]
+        public string InfillBeginString { get; set; } = "<｜fim▁begin｜>";
+
+        [Category("General")]
+        [DisplayName("Infill Hole")]
+        [Description("Infill hole string, e.g. <|fim_hole|> for deepseek")]
+        [DefaultValue("<|fim_hole|>")]
+        public string InfillHoleString { get; set; } = "<｜fim▁hole｜>";
+
+        [Category("General")]
+        [DisplayName("Infill End")]
+        [Description("Infill start string, e.g. <|fim_end|> for deepseek")]
+        [DefaultValue("<|fim_end|>")]
+        public string InfillEndString { get; set; } = "<｜fim▁end｜>";
+
+        [Category("General")]
         [DisplayName("Format Changed Text")]
         [Description("Format text after change.")]
         [DefaultValue(true)]
@@ -35,6 +53,18 @@ namespace AI_Studio
         [Description("Maximum number of tokens to return from the completion API.")]
         [DefaultValue(200)]
         public int MaxTokens { get; set; } = 200;
+
+        [Category("General")]
+        [DisplayName("Context Above")]
+        [Description("Maximum number of lines of context prior to the cursor, for infilling.")]
+        [DefaultValue(100)]
+        public int ContextAbove { get; set; } = 100;
+
+        [Category("General")]
+        [DisplayName("Context Below")]
+        [Description("Maximum number of lines of context after to the cursor, for infilling.")]
+        [DefaultValue(100)]
+        public int ContextBelow { get; set; } = 20;
 
         [Category("General")]
         [DisplayName("Language Model")]
